@@ -68,8 +68,8 @@ builddeb: version
 	./setup.py sdist --prune
 	mkdir -p build
 	tar -C build -zxf dist/$(PROJECT)-$(VERSION).tar.gz
-	(cd build/$(PROJECT)-$(VERSION) && debuild -us -uc -v$(VERSION))
-	@echo "Package is at build/$(PROJECT)_$(VERSION)_all.deb"
+	(cd build/$(PROJECT)-$(VERSION) && debuild -us -uc -v$(VERSION)+$(RELEASE))
+	@echo "Package is at build/$(PROJECT)_$(VERSION)+$(RELEASE)_all.deb"
 
 buildsourcedeb: version
 	dch --newversion $(VERSION)~$(DISTRO) --distribution $(DISTRO) --force-distribution -b "Last Commit: $(shell git log -1 --pretty=format:'(%ai) %H %cn <%ce>')"
