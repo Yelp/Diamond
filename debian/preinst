@@ -25,11 +25,11 @@ ctl() {
 
 case "$1" in
     install|upgrade)
-        ctl diamond stop
+        ctl diamond stop || true
     ;;
 
     abort-upgrade)
-        ctl diamond start
+        ctl diamond start || true
     ;;
 
     *)

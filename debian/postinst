@@ -63,6 +63,6 @@ chmod +x /usr/bin/diamond
 # Log / Run directory permissions
 chown -R diamond:diamond /var/log/diamond
 
-[ -e /etc/diamond/diamond.conf ] && ctl diamond start
+[ -e /etc/diamond/diamond.conf ] && ctl diamond start || true
 
 exit 0
