@@ -1,7 +1,7 @@
 DESTDIR=/
 PROJECT=diamond
 VERSION :=$(shell bash version.sh )
-RELEASE :=$(shell ls -1 dist/*.noarch.rpm 2>/dev/null | wc -l )
+RELEASE :=$(shell bash release.sh )
 HASH	:=$(shell git rev-parse HEAD )
 DISTRO=precise
 
@@ -54,7 +54,7 @@ rpm: buildrpm
 
 buildrpm: sdist
 	./setup.py bdist_rpm \
-		--release=`ls dist/*.noarch.rpm | wc -l` \
+		--release=$(RELEASE) \
 		--build-requires='python, python-configobj' \
 		--requires='python, python-configobj'
 
@@ -62,8 +62,8 @@ deb: builddeb
 
 sdeb: buildsourcedeb
 
-builddeb: version 
-	dch --newversion $(VERSION) --distribution unstable --force-distribution -b "Last Commit: $(shell git log -1 --pretty=format:'(%ai) %H %cn <%ce>')"
+builddeb: version
+	dch --newversion $(VERSION)+$(RELEASE) --distribution unstable --force-distribution -b "Last Commit: $(shell git log -1 --pretty=format:'(%ai) %H %cn <%ce>')"
 	dch --release  "new upstream"
 	./setup.py sdist --prune
 	mkdir -p build
@@ -71,7 +71,7 @@ builddeb: version
 	(cd build/$(PROJECT)-$(VERSION) && debuild -us -uc -v$(VERSION))
 	@echo "Package is at build/$(PROJECT)_$(VERSION)_all.deb"
 
-buildsourcedeb: version 
+buildsourcedeb: version
 	dch --newversion $(VERSION)~$(DISTRO) --distribution $(DISTRO) --force-distribution -b "Last Commit: $(shell git log -1 --pretty=format:'(%ai) %H %cn <%ce>')"
 	dch --release  "new upstream"
 	./setup.py sdist --prune
@@ -96,7 +96,7 @@ clean:
 version:
 	./version.sh > version.txt
 
-vertest: version 
+vertest: version
 	echo "${VERSION}"
 
 reltest:
